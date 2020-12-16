@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bjpowernode.model.dao.StudentsDao">
+  <resultMap id="BaseResultMap" type="com.bjpowernode.entity.Students">
+    <id column="stu_id" jdbcType="INTEGER" property="stuId" />
+    <result column="stu_name" jdbcType="VARCHAR" property="stuName" />
+    <result column="stu_sex" jdbcType="INTEGER" property="stuSex" />
+    <result column="tea_Id" jdbcType="INTEGER" property="teaId" />
+    <result column="stu_status" jdbcType="VARCHAR" property="stuStatus" />
+    <result column="tea_Name" jdbcType="VARCHAR" property="teacher.teaName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    s.stu_id, s.stu_name, s.stu_sex, s.stu_status, t.tea_Name
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+     stu_id, stu_name, stu_sex, stu_status, tea_id
+    from t_students
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_students
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_students
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="stu_id" keyProperty="stuId" parameterType="com.bjpowernode.entity.Students" useGeneratedKeys="true">
+    insert into t_students (stu_name, stu_sex, stu_status, tea_Id
+      )
+    values (#{stuName,jdbcType=VARCHAR}, #{stuSex,jdbcType=INTEGER}, #{stuStatus,jdbcType=VARCHAR},#{teaId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="stu_id" keyProperty="stuId" parameterType="com.bjpowernode.entity.Students" useGeneratedKeys="true">
+    insert into t_students
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stuName != null">
+        stu_name,
+      </if>
+      <if test="stuSex != null">
+        stu_sex,
+      </if>
+      <if test="stuStatus != null">
+        stu_status,
+      </if>
+      <if test="teaId != null">
+        tea_Id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="stuName != null">
+        #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuSex != null">
+        #{stuSex,jdbcType=INTEGER},
+      </if>
+      <if test="stuStatus != null">
+        #{stuStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="teaId != null">
+        #{teaId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bjpowernode.entity.Students">
+    update t_students
+    <set>
+      <if test="stuName != null">
+        stu_name = #{stuName,jdbcType=VARCHAR},
+      </if>
+      <if test="stuSex != null">
+        stu_sex = #{stuSex,jdbcType=INTEGER},
+      </if>
+      <if test="stuStatus != null">
+        stu_status = #{stuStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bjpowernode.entity.Students">
+    update t_students
+    set stu_name = #{stuName,jdbcType=VARCHAR},
+      stu_sex = #{stuSex,jdbcType=INTEGER},
+      stu_status = #{stuStatus,jdbcType=VARCHAR},
+      tea_Id = #{teaId,jdbcType=VARCHAR}
+    where stu_id = #{stuId,jdbcType=INTEGER}
+  </update>
+  <select id="selectfind"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_students s LEFT JOIN t_teacher t ON s.tea_id=t.tea_id
+  </select>
+</mapper>
